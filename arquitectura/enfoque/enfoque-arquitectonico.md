@@ -10,30 +10,6 @@ Se aplica **Clean Architecture** para aislar el núcleo de las reglas de negocio
 4. **Capa de Infraestructura:** Conectores a la base de datos SQL, cliente Redis, cliente para API de IA y cola de procesos asíncronos.
 
 ## 3. Diagrama de Enfoque (Clean Architecture)
-```mermaid
-graph TD
-    subgraph Capa de Infraestructura
-        DBSQL[(Base de Datos SQL)]
-        CacheRedis[(Redis Cache)]
-        IA_API[Proveedor LLM / IA]
-    end
 
-    subgraph Capa de Presentación
-        Controllers[Controladores REST / Frontend Web]
-    end
 
-    subgraph Capa de Aplicación
-        UC[Casos de Uso: ReservarClase, RegistrarPago, ConsultarIA]
-        Ports[Interfaces de Repositorios / Puertos]
-    end
-
-    subgraph Capa de Dominio
-        Entities[Entidades: Socio, Membresía, Clase, Reserva]
-    end
-
-    Controllers --> UC
-    UC --> Entities
-    UC --> Ports
-    DBSQL ..|> Ports
-    CacheRedis ..|> Ports
-    IA_API ..|> Ports
+![Enfoque Clean Architecture](../../assets/Enfoque-Arquitectonico.jpg)
