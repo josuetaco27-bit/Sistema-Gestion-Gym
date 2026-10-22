@@ -1,56 +1,62 @@
-# Arquitectura Inicial del Sistema de Gimnasio
+# 01. Arquitectura Inicial del Sistema
 
-## Diagrama de Arquitectura
+## 1. Visión General de la Arquitectura
+La **Arquitectura Inicial** del **Sistema de Gestión de Gimnasio** ha sido concebida para brindar una solución centralizada, de alto rendimiento y fácil mantenimiento. El objetivo principal es respaldar las operaciones cotidianas del gimnasio (registro de socios, control de membresías, reserva de clases grupales y pagos) integrando capacidades avanzadas como asistencia mediante Inteligencia Artificial y consultas de cupos en tiempo real.
+
+---
+
+## 2. Diagrama de Arquitectura Inicial (Alto Nivel)
 
 ```mermaid
-flowchart TD
-
-    subgraph ACTORES["ACTORES"]
-        Socio["Socio"]
-        Recep["Recepcionista"]
-        Admin["Administrador"]
+graph TD
+    %% Clientes / Canales de Entrada
+    subgraph Canales_de_Acceso [Clientes / Interfaces]
+        WebAdmin[Dashboard Recepción / Admin]
+        AppSocio[App Móvil / Web Socio]
+        BiometricQR[Lector QR / Biométrico Recep]
     end
 
-    subgraph PRESENTACION["CAPA PRESENTACIÓN"]
-        Web["Aplicación Web Frontend"]
+    %% Capa Backend Central
+    subgraph Core_Backend [Servidor de Aplicación - Monolito]
+        APIGateway[REST API Gateway & Security Auth JWT]
+        
+        subgraph Modulos_de_Negocio [Módulos Internos]
+            ModSocios[Módulo Socios]
+            ModClases[Módulo Clases & Reservas]
+            ModPagos[Módulo Pagos]
+            ModIA[Módulo Asistente IA]
+        end
     end
 
-    subgraph APLICACION["CAPA APLICACIÓN / API"]
-        API["API REST Gateway"]
+    %% Capa de Persistencia y Soporte
+    subgraph Persistencia_Soporte [Servicios de Datos e Infraestructura]
+        DBSQL[(PostgreSQL - Base de Datos Relacional)]
+        CacheRedis[(Redis - Caché en Memoria)]
+        QueueWorker[Cola de Tareas Asíncronas]
     end
 
-    subgraph CACHE["CAPA DE CACHÉ / EVENTOS"]
-        Redis["Redis (Caché Cupos/Sesiones)"]
-        Queue["Cola / Workers Asíncronos"]
+    %% Servicios Externos
+    subgraph Servicios_Externos [Integraciones de Terceros]
+        ExternalIA[Proveedor API LLM / IA]
+        PaymentGateway[Pasarela de Pagos Stripe/Culqi]
     end
 
-    subgraph NEGOCIO["LÓGICA DE NEGOCIO"]
-        ModSocios["Módulo Socios y Membresías"]
-        ModClases["Módulo Clases y Reservas"]
-        ModPagos["Módulo Pagos y Asistencia"]
-        ModIA["Módulo Asistente IA"]
-    end
+    %% Conexiones
+    WebAdmin -->|HTTP / REST| APIGateway
+    AppSocio -->|HTTP / REST| APIGateway
+    BiometricQR -->|HTTP / REST| APIGateway
 
-    subgraph DATOS["CAPA DE DATOS"]
-        BD[("Base de Datos SQL")]
-    end
+    APIGateway --> ModSocios
+    APIGateway --> ModClases
+    APIGateway --> ModPagos
+    APIGateway --> ModIA
 
-    subgraph EXTERNOS["SERVICIOS EXTERNOS"]
-        OpenAI["Servicio LLM / IA"]
-    end
+    ModSocios --> DBSQL
+    ModClases --> DBSQL
+    ModPagos --> DBSQL
+    ModIA --> DBSQL
 
-    ACTORES --> PRESENTACION
-    PRESENTACION --> APLICACION
-    APLICACION --> CACHE
-    APLICACION --> NEGOCIO
-    NEGOCIO --> BD
-    NEGOCIO --> OpenAI
-    Queue --> BD
-```
-
-## Descripción
-La arquitectura inicial está diseñada con una estructura en capas escalable que responde a los requerimientos del proyecto:
-- **Capa de Presentación:** Interfaz web interactiva para Socios, Recepcionistas y Administradores.
-- **Capa de Aplicación y Caché:** La API REST responde a solicitudes y utiliza **Redis** para mantener en caché la información de clases y disponibilidad de cupos, reduciendo la carga en la BD. Además, utiliza procesos asíncronos para evitar bloqueos (*No Waitpoint*).
-- **Lógica de Negocio:** Organizada en módulos independientes (Socios, Clases, Pagos y el Asistente IA).
-- **Servicios Externos y Datos:** Integración con servicios de Inteligencia Artificial y persistencia en Base de Datos SQL.
+    ModClases -->|Consulta rápida cupos| CacheRedis
+    ModPagos -->|Proceso asíncrono comprobantes| QueueWorker
+    ModPagos -->|Integración API| PaymentGateway
+    ModIA -->|Integración Prompts| ExternalIA
