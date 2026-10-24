@@ -28,42 +28,4 @@
 
 ## 3. Diagrama de Enfoque Clean Architecture (Sintaxis Mermaid)
 
-```mermaid
-graph TD
-    subgraph Capa_de_Infraestructura [Capa de Infraestructura / External]
-        DBSQL[(PostgreSQL Database)]
-        CacheRedis[(Redis In-Memory Cache)]
-        PaymentAPI[Pasarela de Pagos Stripe/Culqi]
-        LLM_API[Proveedor LLM / OpenAI]
-    end
-
-    subgraph Capa_de_Presentacion [Capa de Presentación / Adapters]
-        UI_Web[Frontend Web / App Móvil]
-        Controllers[Controladores REST]
-        RepoImpl[Repositorio Implementación SQL]
-        AdapterPay[Adaptador de Pagos]
-        AdapterIA[Adaptador de IA]
-    end
-
-    subgraph Capa_de_Aplicación [Capa de Aplicación]
-        UC[Casos de Uso: ReservarClase, RegistrarSocio, ConsultarIA]
-        Ports[Interfaces Repositorios & Puertos]
-    end
-
-    subgraph Capa_de_Dominio [Capa de Dominio - Core]
-        Entities[Entidades: Socio, Membresía, Clase, Reserva]
-    end
-
-    UI_Web --> Controllers
-    Controllers --> UC
-    UC --> Entities
-    UC --> Ports
-
-    RepoImpl ..|> Ports
-    AdapterPay ..|> Ports
-    AdapterIA ..|> Ports
-
-    RepoImpl --> DBSQL
-    RepoImpl --> CacheRedis
-    AdapterPay --> PaymentAPI
-    AdapterIA --> LLM_API
+![Enfoque Arquitectónico](../../imagen/Enfoque-Arquitectonico.png)

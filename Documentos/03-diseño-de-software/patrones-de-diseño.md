@@ -23,24 +23,4 @@ En la construcción del **Sistema de Gestión de Gimnasio**, los patrones de dis
 * **Problema:** Las APIs de LLM (OpenAI, Anthropic) o pasarelas de pago modifican frecuentemente sus firmas de métodos e interfaces.
 * **Solución:** Definición de una interfaz propia (`ILLMProviderPort`) en la capa de aplicación. El adaptador concreto (`OpenAIAdapter`) implementa esta interfaz y traduce los objetos de dominio al formato nativo del proveedor externo.
 
-```mermaid
-classDiagram
-    class GenerarRutinaUseCase {
-        +execute(promptDTO)
-    }
-    class ILLMProviderPort {
-        <<interface>>
-        +generarRespuesta(prompt: String): String
-    }
-    class OpenAIAdapter {
-        -apiKey: String
-        +generarRespuesta(prompt: String): String
-    }
-    class ClaudeAdapter {
-        -apiKey: String
-        +generarRespuesta(prompt: String): String
-    }
-
-    GenerarRutinaUseCase --> ILLMProviderPort
-    OpenAIAdapter ..|> ILLMProviderPort
-    ClaudeAdapter ..|> ILLMProviderPort
+![Patrones de Diseño](../../imagen/Patrones-diseño.png)

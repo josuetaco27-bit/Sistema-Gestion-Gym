@@ -32,38 +32,4 @@ Toda la aplicación backend se empaqueta y despliega como una única unidad ejec
 
 ## 4. Diagrama Estructural (Sintaxis Mermaid)
 
-```mermaid
-graph TD
-    ClientWeb[Cliente Web / App Móvil] -->|HTTP / REST API| Gateway[REST API Gateway / Endpoints]
-
-    subgraph Monolito Backend Gimnasio
-        subgraph Modulo Socios
-            PresS[Presentación] --> LogS[Lógica de Negocio] --> DatS[Acceso a Datos]
-        end
-        
-        subgraph Modulo Clases y Reservas
-            PresC[Presentación] --> LogC[Lógica de Negocio] --> DatC[Acceso a Datos]
-        end
-        
-        subgraph Modulo Pagos
-            PresP[Presentación] --> LogP[Lógica de Negocio] --> DatP[Acceso a Datos]
-        end
-
-        subgraph Modulo Asistente IA
-            PresIA[Presentación] --> LogIA[Lógica de Negocio] --> DatIA[Acceso a Datos]
-        end
-    end
-
-    Gateway --> PresS
-    Gateway --> PresC
-    Gateway --> PresP
-    Gateway --> PresIA
-
-    DatS --> DBSQL[(Base de Datos SQL - PostgreSQL)]
-    DatC --> DBSQL
-    DatP --> DBSQL
-    DatIA --> DBSQL
-
-    LogC -->|Caché rápida de cupos| Redis[(Redis Cache)]
-    LogP -->|API REST| PaymentGateway[Pasarela de Pagos Externa]
-    LogIA -->|Integración LLM| ExternalIA[Servicio IA / OpenAI]
+![Estilo Arquitectónico](../../imagen/Estilo-Arquitectonico.png)
