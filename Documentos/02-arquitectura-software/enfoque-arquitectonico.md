@@ -28,4 +28,4 @@
 
 ## 3. Diagrama de Enfoque Clean Architecture (Sintaxis Mermaid)
 
-![Enfoque Arquitectónico](../../imagen/Enfoque-Arquitectonico.png)
+![Enfoque Arquitectónico](../../imagen/Enfoque-Arquitectonico.jpg)
