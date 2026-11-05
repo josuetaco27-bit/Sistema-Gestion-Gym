@@ -61,3 +61,13 @@
 * **Entorno:** Fase de mantenimiento y evolución del sistema.
 * **Respuesta:** Incorporación del nuevo adaptador sin necesidad de modificar el dominio ni las reglas centrales de membresía.
 * **Medida de Respuesta:** Cero impacto o refactorización en los módulos funcionales preexistentes.
+
+## 3. Matriz de Medición de Atributos de Calidad
+
+| ID | Atributo de Calidad | Indicador de Medición | Método de Evaluación | Métrica / Objetivo | Herramienta |
+|---|---|---|---|---|---|
+| AC-01 | Rendimiento | Tiempo de respuesta de consultas de clases y cupos | Ejecutar 1,000 consultas y registrar sus tiempos de respuesta | Al menos el 95 % de las peticiones debe responder en menos de 200 ms | Apache JMeter / k6 |
+| AC-02 | Escalabilidad | Capacidad de procesamiento bajo carga | Simular cargas progresivas y registrar tiempos de respuesta y errores | Soportar 500 solicitudes por minuto, sin caídas y dentro de los límites de rendimiento establecidos | Apache JMeter / k6 |
+| AC-03 | Disponibilidad | Porcentaje de tiempo operativo y continuidad del servicio | Monitorear el sistema y simular fallos de los servicios externos de IA y notificaciones | Disponibilidad mínima del 99.9 % y continuidad de reservas y pagos ante fallos externos | Uptime Kuma / Pruebas de fallos |
+| AC-04 | Seguridad | Porcentaje de pruebas de autenticación y autorización aprobadas | Verificar JWT, roles RBAC, tokens vencidos y accesos no autorizados | 100 % de las pruebas críticas aprobadas, sin accesos no autorizados | Postman / OWASP ZAP |
+| AC-05 | Mantenibilidad | Tiempo de implementación y cantidad de módulos modificados | Implementar una funcionalidad de prueba y evaluar los cambios realizados | Completar el cambio en un máximo de 4 horas, modificando como máximo un módulo de negocio y sin fallos de regresión | GitHub / Pruebas automatizadas |
